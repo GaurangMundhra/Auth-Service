@@ -15,9 +15,14 @@ import java.util.Set;
 public class UserInfo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -27,6 +32,4 @@ public class UserInfo {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<UserRole> roles;
-
-
 }

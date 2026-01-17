@@ -47,9 +47,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public Boolean signUpUser(UserInfoDto userInfoDto){
         ValidationUtil.validateUserAttributes(userInfoDto);
         userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
-        if(Objects.nonNull(checkIfUserExists(userInfoDto.getUsername()))){
+        if (checkIfUserExists(userInfoDto.getUsername()).isPresent()) {
             return false;
         }
+
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(userInfoDto.getUsername());
         userInfo.setPassword(userInfoDto.getPassword());
