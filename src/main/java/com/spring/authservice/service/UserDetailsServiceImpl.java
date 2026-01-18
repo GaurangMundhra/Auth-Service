@@ -41,6 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public Optional<UserInfo> checkIfUserExists(String username){
+
         return userRepository.findByUsername(username);
     }
 

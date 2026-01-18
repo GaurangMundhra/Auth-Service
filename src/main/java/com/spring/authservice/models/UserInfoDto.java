@@ -13,11 +13,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoDto extends UserInfo {
+public class UserInfoDto {
 
     private String username;
 
     private String lastname;
+    private String password;
+
 
     private long phonenumber;
 

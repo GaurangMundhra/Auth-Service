@@ -31,20 +31,26 @@ public class AuthController
     private UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("auth/v1/signup")
-    @Transactional
-    public ResponseEntity SignUp(@RequestBody UserInfoDto userInfoDto){
-        try{
-            Boolean isSignUp = userDetailsService.signUpUser(userInfoDto);
-            if(Boolean.FALSE.equals(isSignUp)){
-                return new ResponseEntity<>("Already Exist", HttpStatus.BAD_REQUEST);
-            }
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userInfoDto.getUsername());
-            String jwtToken = jwtService.GenerateToken(userInfoDto.getUsername());
-            return new ResponseEntity<>(JwtResponseDto.builder().accessToken(jwtToken).
-                    token(refreshToken.getToken()).build(), HttpStatus.OK);
-        }catch (Exception ex){
-            return new ResponseEntity<>("Exception in User Service", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> signUp(@RequestBody UserInfoDto userInfoDto) {
+        Boolean isSignUp = userDetailsService.signUpUser(userInfoDto);
+
+        if (!isSignUp) {
+            return ResponseEntity.badRequest().body("Already Exist");
         }
+
+        RefreshToken refreshToken =
+                refreshTokenService.createRefreshToken(userInfoDto.getUsername());
+
+        String jwtToken =
+                jwtService.GenerateToken(userInfoDto.getUsername());
+
+        return ResponseEntity.ok(
+                JwtResponseDto.builder()
+                        .accessToken(jwtToken)
+                        .token(refreshToken.getToken())
+                        .build()
+        );
     }
+
 
 }

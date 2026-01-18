@@ -10,7 +10,8 @@ public class ValidationUtil {
             throw new IllegalArgumentException("Username cannot be empty");
         }
 
-        if(dto.getEmail() == null || !dto.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (dto.getEmail() != null &&
+                !dto.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new IllegalArgumentException("Invalid email format");
         }
 
@@ -18,4 +19,5 @@ public class ValidationUtil {
             throw new IllegalArgumentException("Password must be at least 6 characters");
         }
     }
+
 }
