@@ -1,12 +1,14 @@
 package com.spring.authservice.service;
 
 import com.spring.authservice.entities.UserInfo;
+import com.spring.authservice.eventProducer.UserInfoProducer;
 import com.spring.authservice.models.UserInfoDto;
 import com.spring.authservice.repository.UserRepository;
 import com.spring.authservice.util.ValidationUtil;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
@@ -60,6 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(userInfo);
         log.info("User Registered Successfully..!!!");
         // pushEventToQueue
+        userInfoProducer.sendEventToKafka(userInfoDto);
         return true;
     }
 }
