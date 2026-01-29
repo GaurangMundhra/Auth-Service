@@ -1,5 +1,6 @@
 package com.spring.authservice.auth;
 
+import com.spring.authservice.eventProducer.UserInfoProducer;
 import com.spring.authservice.repository.UserRepository;
 import com.spring.authservice.service.UserDetailsServiceImpl;
 import lombok.Data;
@@ -32,9 +33,12 @@ public class SecurityConfig {
     @Autowired
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
+
     @Bean
     public UserDetailsService userDetails(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return new UserDetailsServiceImpl(userRepository, passwordEncoder);
+        return new UserDetailsServiceImpl(userRepository, passwordEncoder, userInfoProducer);
     }
 
     @Bean
