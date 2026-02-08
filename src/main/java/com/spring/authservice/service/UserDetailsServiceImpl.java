@@ -1,6 +1,7 @@
 package com.spring.authservice.service;
 
 import com.spring.authservice.entities.UserInfo;
+import com.spring.authservice.eventProducer.UserInfoEvent;
 import com.spring.authservice.eventProducer.UserInfoProducer;
 import com.spring.authservice.models.UserInfoDto;
 import com.spring.authservice.repository.UserRepository;
@@ -53,20 +54,32 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public Boolean signUpUser(UserInfoDto userInfoDto){
         ValidationUtil.validateUserAttributes(userInfoDto);
         userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
-        if (checkIfUserExists(userInfoDto.getUsername()).isPresent()) {
+        if (checkIfUserExists(userInfoDto.getUserName()).isPresent()) {
             return false;
         }
 
+        String userId = UUID.randomUUID().toString();
         UserInfo userInfo = new UserInfo();
-        userInfo.setUsername(userInfoDto.getUsername());
+        userInfo.setUserId(userId);
+        userInfo.setUsername(userInfoDto.getUserName());
         userInfo.setPassword(userInfoDto.getPassword());
         userInfo.setRoles(new HashSet<>());
 
         userRepository.save(userInfo);
         log.info("User Registered Successfully..!!!");
         // pushEventToQueue
-        userInfoProducer.sendEventToKafka(userInfoDto);
+        userInfoProducer.sendEventToKafka(userInfoEventToPublish(userInfoDto, userInfo.getUserId()));
         return true;
+    }
+
+    private UserInfoEvent userInfoEventToPublish(UserInfoDto userInfoDto, String userId) {
+        return UserInfoEvent.builder()
+                .userId(userId)
+                .firstName(userInfoDto.getFirstName())
+                .lastName(userInfoDto.getLastName())
+                .email(userInfoDto.getEmail())
+                .phoneNumber(userInfoDto.getPhoneNumber())
+                .build();
     }
 }
 

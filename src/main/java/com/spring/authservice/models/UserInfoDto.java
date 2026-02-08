@@ -12,13 +12,16 @@ import lombok.*;
 @AllArgsConstructor
 public class UserInfoDto {
 
-    private String username;
+    private String userName;
 
-    private String lastname;
+    private String firstName;
+
+    private String userId;
+
+    private String lastName;
     private String password;
 
-
-    private long phonenumber;
+    private long phoneNumber;
 
     private String email;
 }

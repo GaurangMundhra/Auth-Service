@@ -6,7 +6,7 @@ public class ValidationUtil {
 
     public static void validateUserAttributes(UserInfoDto dto) {
 
-        if (dto.getUsername() == null || dto.getUsername().isBlank()) {
+        if (dto.getUserName() == null || dto.getUserName().isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
 

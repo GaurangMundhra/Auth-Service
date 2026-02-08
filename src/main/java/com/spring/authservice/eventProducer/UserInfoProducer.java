@@ -22,10 +22,10 @@ public class UserInfoProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendEventToKafka(UserInfoDto userInfoDto) {
+    public void sendEventToKafka(UserInfoEvent eventData) {
 
-        System.out.println("AUTH_SERVICE = " + userInfoDto);
-        Message<UserInfoDto> message = MessageBuilder.withPayload(userInfoDto)
+        System.out.println("AUTH_SERVICE = " + eventData);
+        Message<UserInfoEvent> message = MessageBuilder.withPayload(eventData)
                 .setHeader(KafkaHeaders.TOPIC, topicName)
                 .build();
         kafkaTemplate.send(message);
